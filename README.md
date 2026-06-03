@@ -151,6 +151,8 @@ This project serves as a foundation for candidates to demonstrate:
 
 
 Jun 3
+
+
 Walkthrough - Banking Dashboard Assessment
 We have successfully completed all the backend implementation, frontend enhancements, and the Real Time Analytics Dashboard system design.
 
@@ -216,104 +218,6 @@ Balance updates persist in memory SQLite.
 Pagination, type filter, and sort endpoints are tested and confirmed functional.
 
 
-
-
-
-Project Goal
-Transform a barebones, in-memory banking application into a resilient, production-ready dashboard featuring robust transaction processing, real-time consistency, and a premium Light-Mode UI.
-
-Scope Delivered
-
-  
-System Architecture: Designed a scalable Real-Time Analytics system processing 10,000 events/sec.
-
-  
-Database Schema & Seed: Designed SQL schema and loaded historical transactions.
-
-  
-Transaction Processing Engine: Developed API with strict input validations and atomic commits.
-
-  
-Aura Premium UI: Created a state-of-the-art responsive interface with sorting, filtering, and pagination.
-
-
-Mermaid diagram
-Architectural Details
-
-  
-Ingestion (15ms SLA): Stateless nodes scaled horizontally behind a Load Balancer.
-
-  
-Broker (Kafka): Decouples layers. Partitions events by ID to scale writes.
-
-  
-Stream Processing (Flink): Windowed aggregations (sliding 1-min) checkpointed to S3.
-
-  
-Analytical Storage (ClickHouse): Row compression reduces 5MB/s stream to 1MB/s (~86GB/day).
-
-  
-Slide 3: Backend Transaction Engine
-Database Schemas
-Added a transactions table with full constraints referencing accounts table. Seeded with candidate data.
-
-API Endpoints
-
-  
-GET /api/accounts/:id/transactions: Returns paginated, sorted, and filtered transaction history.
-
-  
-POST /api/accounts/:id/transactions: Dispatches transactions.
-
-  
-Consistency Highlights
-For transfer requests, both accounts are adjusted, and transactions are logged in a single database transaction block:
-
-typescript
-
-try {
-  await dbRun("BEGIN EXCLUSIVE TRANSACTION");
-  // 1. Debit Source Account
-  // 2. Credit Target Account
-  // 3. Log Source & Target Transaction Records
-  await dbRun("COMMIT");
-} catch (err) {
-  await dbRun("ROLLBACK");
-}
-
-
-Slide 4: Premium Frontend UI (Aura)
-User Interface Overhaul
-
-  
-Interactive Cards: Active states indicate selected accounts, showing balance details and type tags.
-
-  
-Dynamic Actions: Select an account to open transaction lists and transaction forms in a dual-column layout.
-
-  
-Transaction Form: Inline schema errors, available-balance validation, and clean loading state.
-
-  
-History Grid: Paginated, sortable (Date/Amount), and filterable (Deposits/Withdrawals/Transfers) table.
-
-
-
-
-Slide 5: Quality & Security Highlights
-Built-in Safeguards
-
-  
-Data Integrity: SQL Transactions guarantee that no money is lost during transfers if the process gets interrupted.
-
-  
-Validation Errors: Inline UI alerts guide users to type positive numbers and input valid descriptions.
-
-  
-Optimistic Sync: Balances sync across all components instantly on transaction success.
-
-  
-TypeScript Safety: Compiled and bundled with zero TypeScript errors.
 
 
 
