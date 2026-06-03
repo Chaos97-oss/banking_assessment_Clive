@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>Banking Dashboard</h1>
+        <h1>Clive Banking Dashboard</h1>
       </header>
       <main className="main">
         <AccountList />
